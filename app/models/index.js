@@ -1,20 +1,22 @@
-const config = require("../config/config.js");
+const env = process.env.NODE_ENV || 'development';
+const config = require("../config/config.js")[env];
+const pool = require("../config/config.js")['pool'];
 const { Sequelize, DataTypes, Op } = require("sequelize");
-
+console.log(config)
 const sequelize = new Sequelize(
-  config.db.DB_NAME,
-  config.db.DB_USER,
-  config.db.DB_PASS,
+  config.database,
+  config.username,
+  config.password,
   {
-    host: config.db.DB_HOST,
-    dialect: config.db.dialect,
+    host: config.host,
+    dialect: config.dialect,
     operatorsAliases: false,
 
     poll: {
-      max: config.db.pool.max,
-      min: config.db.pool.min,
-      acquire: config.db.pool.acquire,
-      idle: config.db.pool.idle
+      max: pool.max,
+      min: pool.min,
+      acquire: pool.acquire,
+      idle: pool.idle
     }
   }
 );
@@ -27,19 +29,5 @@ db.sequelize = sequelize;
 
 db.books = require("./book.model.js")(sequelize, Sequelize, DataTypes);
 db.user = require("./user.model.js")(sequelize, Sequelize, DataTypes);
-db.role = require("./role.model.js")(sequelize, Sequelize, DataTypes);
-
-db.role.belongsToMany(db.user, {
-  through: "user_roles",
-  foreignKey: "role_id",
-  otherKey: "user_id"
-});
-db.user.belongsToMany(db.role, {
-  through: "user_roles",
-  foreignKey: "user_id",
-  otherKey: "role_id"
-});
-
-db.ROLES = ["user", "admin", "moderator"];
 
 module.exports = db;
