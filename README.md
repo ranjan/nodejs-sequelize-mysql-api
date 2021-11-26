@@ -44,6 +44,31 @@
    npm run dev
    ```
 
+```
+node --experimental-repl-await
+
+var db = require('./models');
+var User = db.User;
+
+var u = new User({
+    first_name: 'title',
+    last_name: 'title',
+    age: 18,
+    email: 'a@bc.com',
+    password: 'ranjan',
+    raferral_code: '11description'
+  });
+ //u.generateHash(password)  
+ const x = await u.save()
+ 
+ 
+ 
+var db = require('./models');
+var User = db.User;
+var u = await User.findOne({ id: 1});
+var users = await User.findAll()
+u.generateHash
+```
 ## Resources
 
 1. [Node.js Rest APIs example with Express, Sequelize & MySQL](https://bezkoder.com/node-js-express-sequelize-mysql/)
